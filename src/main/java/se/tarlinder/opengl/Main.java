@@ -20,23 +20,22 @@ public class Main {
                 -0.5f, 0.5f, 0,
                 0.5f, 0.5f, 0,
                 0.5f, -0.5f, 0,
-
-                0.5f, -0.5f, 0,
-                -0.5f, -0.5f, 0,
-                -0.5f, 0.5f, 0
+                -0.5f, -0.5f, 0
         };
 
         float[] textureCoords = new float[]{
-                0, 0, // Top right triangle
+                0, 0,
                 1, 0,
                 1, 1,
-
-                1, 1, // Bottom left triangle
                 0, 1,
-                0, 0
         };
 
-        model = new Model(vertices, textureCoords);
+        int[] indices = new int[]{
+                0, 1, 2,
+                2, 3, 0
+        };
+
+        model = new Model(vertices, textureCoords, indices);
         texture = new Texture("/brick.png");
 
         while (!glfwWindowShouldClose(window)) {
