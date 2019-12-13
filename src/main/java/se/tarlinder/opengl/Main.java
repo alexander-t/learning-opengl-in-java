@@ -16,7 +16,9 @@ public class Main {
     private Model model;
     private Texture texture;
     private Shader shader;
-    private Matrix4f projection;
+    private Matrix4f scale;
+    private Matrix4f world;
+    private Camera camera;
 
     public Main() {
 
@@ -44,7 +46,8 @@ public class Main {
         model = new Model(vertices, textureCoords, indices);
         texture = new Texture("/textures/brick.png");
         shader = new Shader("shader");
-        projection = new Matrix4f().ortho2D(-SCREEN_WIDTH / 2, SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, SCREEN_HEIGHT / 2).scale(128);
+        camera = new Camera(SCREEN_WIDTH, SCREEN_HEIGHT);
+        scale = new Matrix4f().scale(128);
 
         while (!glfwWindowShouldClose(window)) {
             update();
@@ -92,10 +95,11 @@ public class Main {
     }
 
     private void render() {
+        world = scale;
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.bind();
         shader.setUniform("sampler", 0);
-        shader.setUniform("projection", projection);
+        shader.setUniform("projection", camera.getProjection().mul(world));
         texture.bind(0);
         model.render();
     }
