@@ -37,7 +37,7 @@ public class Main {
         };
 
         model = new Model(vertices, textureCoords, indices);
-        //texture = new Texture("/brick.png");
+        texture = new Texture("/textures/brick.png");
         shader = new Shader("shader");
 
         while (!glfwWindowShouldClose(window)) {
@@ -77,21 +77,19 @@ public class Main {
         // Mandatory: make the context current on the calling thread
         glfwMakeContextCurrent(window);
 
-        //T he minimum number of screen updates to wait for until the buffers are swapped by glfwSwapBuffers. Follow vertical sync basically.
+        //The minimum number of screen updates to wait for until the buffers are swapped by glfwSwapBuffers. Follow vertical sync basically.
         glfwSwapInterval(1);
         glfwShowWindow(window);
 
         // Mandatory: Must be called prior to calling any pure glxxx methods.
         GL.createCapabilities();
-
-        // Needed by the fixed pipeline, otherwise the texture won't be shown.
-        glEnable(GL_TEXTURE_2D);
     }
 
     private void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //texture.bind();
         shader.bind();
+        shader.setUniform("sampler", 0);
+        texture.bind(0);
         model.render();
     }
 

@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13C.glActiveTexture;
 
 public class Texture {
     private static final int BYTES_RGBA = 4;
@@ -52,7 +54,11 @@ public class Texture {
         }
     }
 
-    public void bind() {
-        glBindTexture(GL_TEXTURE_2D, id);
+    public void bind(int sampler) {
+        if (sampler >= 0 && sampler <= 31) {
+            // Make zeroth texture unit active. Assumes having only one texture loaded.
+            glActiveTexture(GL_TEXTURE0 + sampler);
+            glBindTexture(GL_TEXTURE_2D, id);
+        }
     }
 }

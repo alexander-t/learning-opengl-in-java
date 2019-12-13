@@ -30,6 +30,7 @@ public class Shader {
         glAttachShader(programId, fragmentShaderId);
 
         glBindAttribLocation(programId, 0, "vertices");
+        glBindAttribLocation(programId, 1, "textures");
 
         glLinkProgram(programId);
         if (glGetProgrami(programId, GL_LINK_STATUS) != 1) {
@@ -39,6 +40,13 @@ public class Shader {
         glValidateProgram(programId);
         if (glGetProgrami(programId, GL_VALIDATE_STATUS) != 1) {
             throw new ShaderException(glGetProgramInfoLog(programId));
+        }
+    }
+
+    public void setUniform(String name, int value) {
+        int location = glGetUniformLocation(programId, name);
+        if (location != -1) {
+            glUniform1i(location, value);
         }
     }
 
