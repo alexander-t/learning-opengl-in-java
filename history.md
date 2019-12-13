@@ -56,3 +56,10 @@ int[] indices = new int[]{
 };
 ```
 We see that there are no duplicated vertices or coordinates and that the vertices are used to describe what to draw.
+
+#Adding a Shader
+The `Shader` class contains code that loads a vertex and fragment shader, compiles, links, and verifies the resulting 
+program. At this point, the shaders are as simple as they come, and the purpose of the exercise is to make things work.
+
+## Additional Resources
+https://www.khronos.org/opengl/wiki/Shader_Compilation 

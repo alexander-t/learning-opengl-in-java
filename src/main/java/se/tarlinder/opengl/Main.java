@@ -11,6 +11,7 @@ public class Main {
     private long window;
     private Model model;
     private Texture texture;
+    private Shader shader;
 
     public Main() {
 
@@ -36,7 +37,8 @@ public class Main {
         };
 
         model = new Model(vertices, textureCoords, indices);
-        texture = new Texture("/brick.png");
+        //texture = new Texture("/brick.png");
+        shader = new Shader("shader");
 
         while (!glfwWindowShouldClose(window)) {
             update();
@@ -88,7 +90,8 @@ public class Main {
 
     private void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        texture.bind();
+        //texture.bind();
+        shader.bind();
         model.render();
     }
 
