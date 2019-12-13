@@ -124,3 +124,6 @@ Then it's just a matter of picking a pixel from the texture.
 
 ## Additional Resources
 https://www.khronos.org/opengl/wiki/Shader_Compilation 
+
+#Adding Projection
+Projection is just a matrix that needs to be multiplied with in the shader.

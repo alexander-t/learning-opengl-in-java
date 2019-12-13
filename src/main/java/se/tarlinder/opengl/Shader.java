@@ -1,5 +1,10 @@
 package se.tarlinder.opengl;
 
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
+
+import java.nio.FloatBuffer;
+
 import static org.lwjgl.opengl.GL20C.*;
 
 public class Shader {
@@ -47,6 +52,15 @@ public class Shader {
         int location = glGetUniformLocation(programId, name);
         if (location != -1) {
             glUniform1i(location, value);
+        }
+    }
+
+    public void setUniform(String name, Matrix4f value) {
+        int location = glGetUniformLocation(programId, name);
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(16); // 4x4
+        value.get(buffer);
+        if (location != -1) {
+            glUniformMatrix4fv(location, false, buffer);
         }
     }
 

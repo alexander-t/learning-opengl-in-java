@@ -1,5 +1,6 @@
 package se.tarlinder.opengl;
 
+import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
@@ -8,10 +9,14 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Main {
 
+    private static final int SCREEN_WIDTH = 640;
+    private static final int SCREEN_HEIGHT = 480;
+
     private long window;
     private Model model;
     private Texture texture;
     private Shader shader;
+    private Matrix4f projection;
 
     public Main() {
 
@@ -39,6 +44,7 @@ public class Main {
         model = new Model(vertices, textureCoords, indices);
         texture = new Texture("/textures/brick.png");
         shader = new Shader("shader");
+        projection = new Matrix4f().ortho2D(-SCREEN_WIDTH / 2, SCREEN_WIDTH / 2, -SCREEN_HEIGHT / 2, SCREEN_HEIGHT / 2).scale(128);
 
         while (!glfwWindowShouldClose(window)) {
             update();
@@ -65,14 +71,14 @@ public class Main {
         // Window isn't resizable
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-        window = glfwCreateWindow(640, 480, "OpenGL", 0, 0);
+        window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "OpenGL", 0, 0);
         if (window == 0) {
             throw new IllegalStateException("glfwCreateWindow()");
         }
 
         // Center the window
         GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(window, (videoMode.width() - 640) / 2, (videoMode.height() - 480) / 2);
+        glfwSetWindowPos(window, (videoMode.width() - SCREEN_WIDTH) / 2, (videoMode.height() - SCREEN_HEIGHT) / 2);
 
         // Mandatory: make the context current on the calling thread
         glfwMakeContextCurrent(window);
@@ -89,6 +95,7 @@ public class Main {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shader.bind();
         shader.setUniform("sampler", 0);
+        shader.setUniform("projection", projection);
         texture.bind(0);
         model.render();
     }
