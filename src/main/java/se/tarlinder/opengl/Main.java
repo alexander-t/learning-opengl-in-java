@@ -1,6 +1,9 @@
 package se.tarlinder.opengl;
 
+import org.joml.AxisAngle4f;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
@@ -16,9 +19,11 @@ public class Main {
     private Model model;
     private Texture texture;
     private Shader shader;
-    private Matrix4f scale;
-    private Matrix4f world;
     private Camera camera;
+
+    private int cameraAngle = 0;
+
+    private Transform transform = new Transform();
 
     public Main() {
 
@@ -47,7 +52,9 @@ public class Main {
         texture = new Texture("/textures/brick.png");
         shader = new Shader("shader");
         camera = new Camera(SCREEN_WIDTH, SCREEN_HEIGHT);
-        scale = new Matrix4f().scale(128);
+        transform.setPosition(new Vector3f(0, 0, 0));
+        transform.setRotation(new Quaternionf(new AxisAngle4f((float) Math.toRadians(10), new Vector3f(0, 0, 1))));
+        camera.setPosition(new Vector3f(0, 0, 1));
 
         while (!glfwWindowShouldClose(window)) {
             update();
@@ -94,19 +101,25 @@ public class Main {
         GL.createCapabilities();
     }
 
+    private Matrix4f projection = new Matrix4f();
+
     private void render() {
-        world = scale;
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // Compute the MVP (projection-view-model) matrix here. Not in the shader for now.
+        projection = camera.getProjection().mul(camera.getTransform(), projection).mul(transform.getTransformation(), projection);
         shader.bind();
         shader.setUniform("sampler", 0);
-        shader.setUniform("projection", camera.getProjection().mul(world));
+        shader.setUniform("projection", projection);
         texture.bind(0);
         model.render();
     }
 
     private void update() {
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-            // Do something fun here
+            camera.setRotation(new Quaternionf(new AxisAngle4f((float) Math.toRadians(cameraAngle++), new Vector3f(0, 0, 1))));
+        }
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+            camera.setRotation(new Quaternionf(new AxisAngle4f((float) Math.toRadians(cameraAngle--), new Vector3f(0, 0, 1))));
         }
     }
 
